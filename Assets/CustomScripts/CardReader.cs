@@ -18,6 +18,10 @@ public class CardReader : XRSocketInteractor
     float correctSwipeLength = 0.25f;
     float minAcceptableForwardness = 0.7f;
 
+    [Header("Door Bar To Unlock")]
+    [SerializeField]
+    private GameObject _doorLockingBar;
+
     protected override void Start()
     {
         base.Start();
@@ -72,6 +76,7 @@ public class CardReader : XRSocketInteractor
         {
             Debug.Log("Swipe Success");
             isSwipeValid = false;
+            _doorLockingBar.SetActive(false);
             Debug.Log("Swipe Length: " + currentSwipeLength + "/ Minimum Swipe Length: " + correctSwipeLength);
             Debug.Log("Time of Swipe: " + (exitTime - entryTime));
         }
