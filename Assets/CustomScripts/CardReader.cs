@@ -33,11 +33,9 @@ public class CardReader : XRSocketInteractor
         {
             Vector3 keycardUp = _keycardTransform.forward;
             float cardForwardness = Vector3.Dot(keycardUp, Vector3.up);
-            //Debug.Log("cardForwardness: " + cardForwardness);
             if (cardForwardness < minAcceptableForwardness)
             {
                 isSwipeValid = false;
-                Debug.Log("Wrong Card Angle");
             }
         }
     }
@@ -65,7 +63,6 @@ public class CardReader : XRSocketInteractor
         else
         {
             isSwipeValid = false;
-            Debug.Log("Swipe Time incorrect: " + (exitTime - entryTime) + "/ Minimum Swipe Time: " + minSwipeTime + "/ Maximum Swipe Time: " + maxSwipeTime);
             return;
         }
 
@@ -77,14 +74,11 @@ public class CardReader : XRSocketInteractor
             Debug.Log("Swipe Success");
             isSwipeValid = false;
             _doorLockingBar.SetActive(false);
-            Debug.Log("Swipe Length: " + currentSwipeLength + "/ Minimum Swipe Length: " + correctSwipeLength);
-            Debug.Log("Time of Swipe: " + (exitTime - entryTime));
         }
         else
         {
             Debug.Log("Swipe Failed");
             isSwipeValid = false;
-            Debug.Log("Swipe Length: " + currentSwipeLength + "/ Minimum Swipe Length: " + correctSwipeLength);
         }
     }
 
