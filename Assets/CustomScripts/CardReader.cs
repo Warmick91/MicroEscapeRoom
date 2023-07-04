@@ -20,7 +20,7 @@ public class CardReader : XRSocketInteractor
 
     [Header("Door Bar To Unlock")]
     [SerializeField]
-    private GameObject _doorLockingBar;
+    private DoorPadlock _doorToUnlock;
 
     protected override void Start()
     {
@@ -73,7 +73,7 @@ public class CardReader : XRSocketInteractor
         {
             Debug.Log("Swipe Success");
             isSwipeValid = false;
-            _doorLockingBar.SetActive(false);
+            _doorToUnlock.DisablePadlock();
         }
         else
         {

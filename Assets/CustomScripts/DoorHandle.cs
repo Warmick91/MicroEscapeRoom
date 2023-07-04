@@ -10,11 +10,11 @@ public class DoorHandle : XRBaseInteractable
     [Header("Door To Move")]
     [SerializeField] Transform doorTransform;
     float minHoriztonalAngle = 0.3f;
-    float minDistanceFromHandle = 0.2f;
+    float minDistanceFromHandle = 0.05f;
     Vector3 startDoorPosition;
     Vector3 endDoorPosition;
     float doorSlideSpeed = 2f;
-    float doorWeight = 0.5f;
+    //float doorWeight = 0.5f;
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
@@ -28,7 +28,6 @@ public class DoorHandle : XRBaseInteractable
         base.OnSelectExited(args);
         _interactingHand.GetComponentInChildren<XRDirectInteractor>().hideControllerOnSelect = true;
         _interactingHand = null;
-
     }
 
     void Start()
@@ -39,7 +38,7 @@ public class DoorHandle : XRBaseInteractable
 
     void Update()
     {
-        if (_interactingHand != null)
+        if (_interactingHand != null && !DoorPadlock.isPadlockActive)
         {
             Vector3 handPosition = _interactingHand.transform.position;
             _handForwardVector = _interactingHand.transform.forward;
@@ -51,35 +50,24 @@ public class DoorHandle : XRBaseInteractable
             if (handHandleAngle <= minHoriztonalAngle && handHandleAngle >= -minHoriztonalAngle && handleToHandVector.magnitude >= minDistanceFromHandle)
             {
                 Debug.Log("Door should be moving");
-            }
+                float lerpDoorPositionZ = Mathf.Lerp(doorTransform.position.z, handPosition.z, Time.deltaTime * doorSlideSpeed);
+                Vector3 newDoorPosition = new Vector3(startDoorPosition.x, startDoorPosition.y, lerpDoorPositionZ);
+                doorTransform.position = newDoorPosition;
 
-            // if (isAngleCorrect() && getHandDistanceFromHandle() >= minDistanceFromHandle)
-            // {
-            //     doorTransform.position = Vector3.MoveTowards(doorTransform.position, _interactingHand.transform.position, Time.deltaTime * doorSlideSpeed); //Add door weight later
-            //     Debug.Log("The door speed is: " + Time.deltaTime * doorSlideSpeed * doorWeight);
-            // }
+                CheckDoorBounds();
+            }
         }
     }
 
-    // bool isAngleCorrect()
-    // {
-    //     _handForwardVector = _interactingHand.transform.forward;
-    //     float handHandleAngle = Vector3.Dot(_handForwardVector, transform.forward);
-
-    //     if (handHandleAngle >= minHoriztonalAngle)
-    //     {
-    //         //Debug.Log("Hand Forward Vector:" + handHandleAngle);
-    //         return true;
-    //     }
-    //     else
-    //     {
-    //         //Debug.Log("Wrong Hand Angle");
-    //         return false;
-    //     }
-    // }
-
-    // float getHandDistanceFromHandle()
-    // {
-    //     return Vector3.Distance(transform.position, _interactingHand.transform.position);
-    // }
+    void CheckDoorBounds()
+    {
+        if (doorTransform.position.z <= endDoorPosition.z)
+        {
+            doorTransform.position = endDoorPosition;
+        }
+        else if (doorTransform.position.z >= startDoorPosition.z)
+        {
+            doorTransform.position = startDoorPosition;
+        }
+    }
 }

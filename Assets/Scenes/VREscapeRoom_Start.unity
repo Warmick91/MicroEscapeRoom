@@ -670,6 +670,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 415793410}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &533429787 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1024019128184364334, guid: 505ab3b2ca9f8d943940d674d65aac07,
+    type: 3}
+  m_PrefabInstance: {fileID: 1167897335}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &545861894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1022,7 +1028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb8ccf7e6e31fd64ba23f05d4352267c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InteractionManager: {fileID: 0}
+  m_InteractionManager: {fileID: 1470082833}
   m_InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1066,7 +1072,7 @@ MonoBehaviour:
   m_InteractableHoverScale: 1
   m_RecycleDelayTime: 1
   _keycard: {fileID: 1299107620}
-  _doorLockingBar: {fileID: 1167897336}
+  _doorToUnlock: {fileID: 795026052}
 --- !u!4 &621828447 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3834652060116321005, guid: 00592b75c913c8440b1b1229fb990ab9,
@@ -1194,6 +1200,19 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1167897335}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &795026052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 533429787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5f4fc113b46ff4d81bc43382b3a096, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  theActualPadlock: {fileID: 1167897336}
 --- !u!1001 &999291366
 PrefabInstance:
   m_ObjectHideFlags: 0
