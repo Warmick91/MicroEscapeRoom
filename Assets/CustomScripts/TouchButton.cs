@@ -10,7 +10,7 @@ public class TouchButton : XRBaseInteractable
 {
     [Header("Button Data")]
     [SerializeField] string m_buttonSign;
-    [SerializeField] MeshRenderer m_visualButton;
+    MeshRenderer m_visualButton;
     Color originalButtonColor;
     Color pressedButtonColor;
     Vector3 initialButtonPosition;
@@ -20,12 +20,11 @@ public class TouchButton : XRBaseInteractable
     TextMeshProUGUI dispenserScreenText;
     private static TouchButton m_pressedButton = null;
 
-    public UnityEvent onPress;
-    public UnityEvent onRelease;
     bool isPressed = false;
 
     void Start()
-    {
+    {  
+        m_visualButton = transform.parent.GetComponentInChildren<MeshRenderer>();
         originalButtonColor = m_visualButton.material.color;
         pressedButtonColor = Color.green;
         initialButtonPosition = m_visualButton.transform.localPosition;
@@ -42,7 +41,7 @@ public class TouchButton : XRBaseInteractable
             m_pressedButton = this;
             m_visualButton.material.color = pressedButtonColor;
             m_visualButton.transform.localPosition = pressedButtonPosition;
-            onPress?.Invoke();
+            AlterVisibleSequence();
         }
     }
 

@@ -18,6 +18,14 @@ public class CardReader : XRSocketInteractor
     float correctSwipeLength = 0.25f;
     float minAcceptableForwardness = 0.7f;
 
+    [Header("Keypad Lights")]
+    [SerializeField] private GameObject _redLight;
+    [SerializeField] private GameObject _greenLight;
+    [SerializeField] private Material _emissiveRedMaterial;
+    [SerializeField] private Material _emissiveGreenMaterial;
+    [SerializeField] private Light _pointLightRed;
+    [SerializeField] private Light _pointLightGreen;
+
     [Header("Door Bar To Unlock")]
     [SerializeField]
     private DoorPadlock _doorToUnlock;
@@ -63,6 +71,7 @@ public class CardReader : XRSocketInteractor
         else
         {
             isSwipeValid = false;
+            StartCoroutine(LightUp("red"));
             return;
         }
 
@@ -73,17 +82,41 @@ public class CardReader : XRSocketInteractor
         {
             Debug.Log("Swipe Success");
             isSwipeValid = false;
+            StartCoroutine(LightUp("green"));
             _doorToUnlock.DisablePadlock();
         }
         else
         {
             Debug.Log("Swipe Failed");
             isSwipeValid = false;
+            StartCoroutine(LightUp("red"));
         }
     }
 
     public override bool CanSelect(IXRSelectInteractable interactable)
     {
         return false;
+    }
+
+    public IEnumerator LightUp(string color)
+    {
+        if (color == "red")
+        {
+            Material originalMaterial = _redLight.GetComponent<Renderer>().material;
+            _redLight.GetComponent<Renderer>().material = _emissiveRedMaterial;
+            _pointLightRed.enabled = true;
+            yield return new WaitForSeconds(0.5f);
+            _redLight.GetComponent<Renderer>().material = originalMaterial;
+            _pointLightRed.enabled = false;
+        }
+        else if (color == "green")
+        {
+            Material originalMaterial = _greenLight.GetComponent<Renderer>().material;
+            _greenLight.GetComponent<Renderer>().material = _emissiveGreenMaterial;
+            _pointLightGreen.enabled = true;
+            yield return new WaitForSeconds(0.5f);
+            _greenLight.GetComponent<Renderer>().material = originalMaterial;
+            _pointLightGreen.enabled = false;
+        }
     }
 }
