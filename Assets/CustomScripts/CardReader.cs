@@ -80,14 +80,14 @@ public class CardReader : XRSocketInteractor
         float currentSwipeLength = Vector3.Distance(entryPosition, exitPosition);
         if (isSwipeValid && currentSwipeLength >= correctSwipeLength)
         {
-            Debug.Log("Swipe Success");
+            //Debug.Log("Swipe Success");
             isSwipeValid = false;
             StartCoroutine(LightUp("green"));
             _doorToUnlock.DisablePadlock();
         }
         else
         {
-            Debug.Log("Swipe Failed");
+            //Debug.Log("Swipe Failed");
             isSwipeValid = false;
             StartCoroutine(LightUp("red"));
         }

@@ -47,13 +47,11 @@ public class Dispenser : MonoBehaviour
 
         if (isCorrect)
         {
-            Debug.Log("Correct");
             dispenserScreenImage.color = correctDispenserColor;
             if (keycard != null && !keycard.gameObject.activeSelf) keycard.ActivateCard();
         }
         else
         {
-            Debug.Log("Incorrect");
             dispenserScreenImage.color = incorrectDispenserColor;
             DispenserScreenText.text = "";
         }
