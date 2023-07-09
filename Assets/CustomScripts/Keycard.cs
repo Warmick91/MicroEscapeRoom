@@ -3,31 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-//TODO: Doesn't work: angle check, disattaching the card when moving to the sides
 public class Keycard : XRGrabInteractable
 {
     [Header("Card Reader to be used")]
     [Space(2)]
     [SerializeField] CardReader cardReader;
-    GameObject cardRailTrack;
-    float railTrackX;
-    float railTrackZ;
-    bool isOnRailTrack = false;
+    GameObject _cardRailTrack;
+    float _railTrackX;
+    float _railTrackZ;
+    bool _isOnRailTrack = false;
+    XRBaseInteractable _cardInteractable;
+    GameObject _interactingHand;
+    float maxHandDistance = 0.2f;
 
     void Start()
     {
         this.gameObject.SetActive(false);
-        cardRailTrack = cardReader.transform.Find("Card Rail Track").gameObject;
-        railTrackX = cardRailTrack.transform.position.x;
-        railTrackZ = cardRailTrack.transform.position.z;
+        _cardInteractable = GetComponent<XRBaseInteractable>();
+        _cardRailTrack = cardReader.transform.Find("Card Rail Track").gameObject;
+        _railTrackX = _cardRailTrack.transform.position.x;
+        _railTrackZ = _cardRailTrack.transform.position.z;
     }
 
     void Update()
     {
-        if (isOnRailTrack == true)
+        if (!IsHandTooFar())
         {
             StickToTheReader();
         }
+        //Debug.Log(_isOnRailTrack);
     }
 
     public void ActivateCard()
@@ -39,7 +43,7 @@ public class Keycard : XRGrabInteractable
     {
         if (other.gameObject == cardReader.gameObject)
         {
-            isOnRailTrack = true;
+            _isOnRailTrack = true;
         }
     }
 
@@ -47,12 +51,45 @@ public class Keycard : XRGrabInteractable
     {
         if (other.gameObject == cardReader.gameObject)
         {
-            isOnRailTrack = false;
+            _isOnRailTrack = false;
         }
+    }
+
+    bool IsHandTooFar()
+    {
+        if (_interactingHand == null)
+        {
+            return true;
+        }
+
+        Vector3 handPosition = _interactingHand.transform.position;
+        Vector3 railTrackPosition = _cardRailTrack.transform.position;
+
+        bool isHandTooFarOnZAxis = handPosition.z < railTrackPosition.z - maxHandDistance;
+        bool isHandTooFarOnXAxis = handPosition.x > railTrackPosition.x + maxHandDistance
+                                   || handPosition.x < railTrackPosition.x - maxHandDistance;
+
+        return isHandTooFarOnZAxis || isHandTooFarOnXAxis;
     }
 
     void StickToTheReader()
     {
-        this.transform.position = new Vector3(railTrackX, this.transform.position.y, railTrackZ);
+        if (_isOnRailTrack == true && _cardInteractable.interactorsSelecting.Count > 0 && _cardInteractable.interactorsSelecting[0] is XRDirectInteractor)
+        {
+            this.transform.rotation = Quaternion.Euler(-90f, 0, -90f);
+            this.transform.position = new Vector3(_railTrackX, this.transform.position.y, _railTrackZ);
+        }
+    }
+
+    protected override void OnSelectEntered(SelectEnterEventArgs args)
+    {
+        base.OnSelectEntered(args);
+        _interactingHand = args.interactorObject.transform.parent.gameObject;
+    }
+
+    protected override void OnSelectExited(SelectExitEventArgs args)
+    {
+        base.OnSelectExited(args);
+        _interactingHand = null;
     }
 }
